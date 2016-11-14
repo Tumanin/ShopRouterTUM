@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/editLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:id="@+id/buttonPreview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:layout_margin="5dp"
+            android:background="@drawable/button_done"
+            android:gravity="center_vertical">
+
+            <de.applicatum.shoprouter.ui.view.ShopObjectPreview
+                android:id="@+id/shopObjectPreview"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="2dp" />
+
+            <TextView
+                android:id="@+id/textShopObject"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/shopObjectPreview"
+                android:text="ShopObject"
+                android:textColor="@color/dark_grey"
+                android:textSize="16sp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="10dp" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/buttonDone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:background="@drawable/button_done"
+            android:padding="5dp"
+            android:layout_marginRight="10dp"
+            android:text="Fertig"
+            android:textColor="@color/dark_grey"
+            android:textSize="18sp"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+
+    <de.applicatum.shoprouter.ui.view.ShopDetailView
+        android:id="@+id/shopView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/editLayout" />
+
+</RelativeLayout>

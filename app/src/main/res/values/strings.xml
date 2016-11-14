@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">ShopRouter</string>
+
+    <string name="facebook_app_id">551391228399883</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_maps">Map</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_swipe_to_disconnect">Swipe left to delete</string>
+    <string name="dialog_unlink_question">Delete ShoppingList %s?</string>
+    <string name="dialog_btn_dialog_yes">Yes</string>
+    <string name="dialog_btn_dialog_no">No</string>
+    <string name="text_disconnect">DELETE</string>
+    <string name="button_guest_login">Log in as Guest</string>
+
+    <array name="shop_objects">
+        <item>Leere Fläche</item>
+        <item>Eingang/Ausgang</item>
+        <item>Kassen</item>
+        <item>Regal</item>
+    </array>
+
+    <array name="product_groups">
+        <item>Leer</item>
+        <item>Brot</item>
+        <item>Fertiggerichte</item>
+        <item>Fleischgerichte</item>
+        <item>Milchprodukte</item>
+        <item>Obst/Gemüse</item>
+        <item>Getränke</item>
+        <item>Feinkost</item>
+    </array>
+</resources>

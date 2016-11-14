@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="full_white">#FFFFFF</color>
+    <color name="light_grey">#f2f4f5</color>
+    <color name="normal_grey">#82919c</color>
+    <color name="dark_grey">#424242</color>
+    <color name="full_black">#000000</color>
+
+    <color name="brand_lightblue">#5c93ce</color>
+    <color name="brand_lightblue_pressed">#4592e4</color>
+
+    <color name="red">#FFFF0000</color>
+    <color name="red_light">#FF4D4D</color>
+
+
+    <!--Shop objects colors-->
+    <color name="color_cashdesk">#eceff1</color>
+    <color name="color_enter_exit">#b388ff</color>
+    <color name="color_bread">#f57f17</color>
+    <color name="color_fridge">#4fc3f7</color>
+    <color name="color_meat">#f36c60</color>
+    <color name="color_milk">#b3e5fc</color>
+    <color name="color_veget">#72d572</color>
+    <color name="color_drink">#4d73ff</color>
+    <color name="color_delicates">#00796b</color>
+    <color name="color_empty_shelf">#bdbdbd</color>
+</resources>
