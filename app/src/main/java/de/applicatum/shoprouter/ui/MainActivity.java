@@ -40,10 +40,12 @@ import de.applicatum.shoprouter.model.Products.ShoppingListItem;
 import de.applicatum.shoprouter.ui.fragments.GlobalMapFragment;
 import de.applicatum.shoprouter.ui.fragments.MyShoppingListsFragment;
 import de.applicatum.shoprouter.ui.fragments.ProductListFragment;
+import de.applicatum.shoprouter.utils.AppLog;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
 
+    public static final String TAG = "MainActivity";
     private GoogleMap mMap;
     private Toolbar toolbar;
     DrawerLayout drawer;
@@ -85,10 +87,11 @@ public class MainActivity extends AppCompatActivity
 
     private void loadProfile(){
 
-        SharedPreferences pref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences pref = this.getSharedPreferences("ShopRouterPref", Context.MODE_PRIVATE);
         String name = pref.getString("username", "");
-        String userId = pref.getString("username", "");
+        String userId = pref.getString("userId", "");
 
+        AppLog.d(TAG, "loadProfile", "name: "+name+"; userId: "+userId);
         View headerLayout = navigationView.getHeaderView(0);
         TextView username = (TextView) headerLayout.findViewById(R.id.username);
 

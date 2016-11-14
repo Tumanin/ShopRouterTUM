@@ -121,39 +121,40 @@ public class LoginActivity extends AppCompatActivity {
 
     private void loginAsFacebookUser(String token, String userId, String name) {
 
-        SharedPreferences pref = getPreferences(Context.MODE_PRIVATE);
+        AppLog.d(TAG, "loginAsFacebookUser", "name: "+name+"; userId: "+userId);
+        SharedPreferences pref = this.getSharedPreferences("ShopRouterPref", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("username", name);
         editor.putString("userId", userId);
-        editor.commit();
+        editor.apply();
 
         Application application = (Application) getApplication();
         application.loginAsFacebookUser(this, token, userId, name);
     }
 
     private void loginAsGuest() {
-        SharedPreferences pref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences pref = this.getSharedPreferences("ShopRouterPref", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean("guest", true);
         editor.putString("username", "");
         editor.putString("userId", "");
-        editor.commit();
+        editor.apply();
         Application application = (Application) getApplication();
         application.loginAsGuest(this);
     }
 
     private boolean isLoggedAsGuest() {
-        SharedPreferences pref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences pref = this.getSharedPreferences("ShopRouterPref", Context.MODE_PRIVATE);
         return pref.getBoolean("guest", false);
     }
 
     private void logout() {
-        SharedPreferences pref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences pref = this.getSharedPreferences("ShopRouterPref", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.remove("guest");
         editor.putString("username", "");
         editor.putString("userId", "");
-        editor.commit();
+        editor.apply();
         LoginManager.getInstance().logOut();
     }
 }
