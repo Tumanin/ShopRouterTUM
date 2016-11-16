@@ -29,8 +29,10 @@ import de.applicatum.shoprouter.ui.MainActivity;
 import de.applicatum.shoprouter.ui.fragments.dialogs.NewShopSelectProductsDialogFragment;
 import de.applicatum.shoprouter.ui.view.ShopDetailView;
 import de.applicatum.shoprouter.ui.view.ShopObjectPreview;
+import de.applicatum.shoprouter.utils.AppLog;
+import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
-public class ShopEditFragment extends Fragment {
+public class ShopEditFragment extends Fragment implements ShopDetailView.OnMeasureListener{
 
     public static final String TAG = "ShopEditFragment";
     @BindView(R.id.shopObjectPreview)
@@ -40,7 +42,7 @@ public class ShopEditFragment extends Fragment {
     @BindView(R.id.buttonPreview)
     LinearLayout buttonPreview;
     @BindView(R.id.buttonDone)
-    TextView newItem;
+    TextView buttonDone;
     @BindView(R.id.editLayout)
     RelativeLayout editLayout;
     @BindView(R.id.shopView)
@@ -67,6 +69,8 @@ public class ShopEditFragment extends Fragment {
         shopView.setApplication((Application) activity.getApplication());
         if(shop.getWidth()<1 || shop.getHeight()<1){
             startDimensDialog();
+        } else{
+            shopView.setListener(this);
         }
         return view;
     }
@@ -89,9 +93,38 @@ public class ShopEditFragment extends Fragment {
                 startSelectObjectDialog();
                 break;
             case R.id.buttonDone:
-                shop.save((Application)activity.getApplication());
-                //activity.getSupportFragmentManager().popBackStack();
-                activity.onBackPressed();
+
+                final AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+                alert.setTitle("Geschätzte Genauigkeit");
+
+                LayoutInflater inflater = activity.getLayoutInflater();
+                final View dialogView = inflater.inflate(R.layout.view_dialog_rate, null);
+                final MaterialRatingBar ratingBar = (MaterialRatingBar) dialogView.findViewById(R.id.ratingBar);
+                alert.setView(dialogView);
+                alert.setCancelable(false);
+                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                        try {
+                            int rating = ratingBar.getProgress();
+                            AppLog.d(TAG, "buttonDone", "ratingBar: "+rating);
+
+                            shop.setRating(rating);
+                            shop.save((Application)activity.getApplication());
+
+                            GlobalMapFragment fragment = new GlobalMapFragment();
+                            activity.startFragment(fragment, false, 0);
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                            return;
+                        }
+
+                    }
+                });
+
+                alert.show();
+
+
                 break;
         }
     }
@@ -124,12 +157,6 @@ public class ShopEditFragment extends Fragment {
 
             }
         });
-
-//        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//            public void onClick(DialogInterface dialog, int whichButton) {
-//                dialog.dismiss();
-//            }
-//        });
 
         alert.show();
     }
@@ -222,5 +249,11 @@ public class ShopEditFragment extends Fragment {
             shopObjectPreview.setData(null);
             shopView.setObject(null);
         }
+    }
+
+    @Override
+    public void onMeasureDone() {
+        AppLog.d(TAG, "onMeasureDone", "start");
+        shopView.setData(shop, true);
     }
 }

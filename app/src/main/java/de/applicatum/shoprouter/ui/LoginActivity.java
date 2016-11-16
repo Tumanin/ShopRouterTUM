@@ -41,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         if (ACTION_LOGOUT.equals(getIntent().getAction())) {
+            AppLog.d(TAG, "onCreate", "action logout");
             logout();
         } else {
             AccessToken accessToken = AccessToken.getCurrentAccessToken();
@@ -156,5 +157,6 @@ public class LoginActivity extends AppCompatActivity {
         editor.putString("userId", "");
         editor.apply();
         LoginManager.getInstance().logOut();
+        AccessToken.setCurrentAccessToken(null);
     }
 }

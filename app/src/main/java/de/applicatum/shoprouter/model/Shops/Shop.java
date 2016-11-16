@@ -21,8 +21,12 @@ public class Shop{
     private double latitude;
     private double longitude;
     private String address;
+    private String country;
     private int rating;
+    private int ratingCount;
     private String creator;
+    private String lastModifier;
+    private String oldId;
 
     private int width;
     private int height;
@@ -35,6 +39,14 @@ public class Shop{
         this.longitude = longitude;
         this.address = address;
         this.discussion = new HashMap<>();
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getId() {
@@ -82,7 +94,21 @@ public class Shop{
     }
 
     public void setRating(int rating) {
-        this.rating = rating;
+        AppLog.d(TAG, "setRating", "rating: "+rating);
+        AppLog.d(TAG, "setRating", "old count: "+ratingCount);
+        AppLog.d(TAG, "setRating", "old rating: "+this.rating);
+        int result = (this.rating*ratingCount+rating)/(ratingCount+1);
+        ratingCount++;
+        AppLog.d(TAG, "setRating", "new rating: "+result);
+        this.rating = result;
+    }
+
+    public int getRatingCount(){
+        return ratingCount;
+    }
+
+    public void setRatingCount(int ratingCount) {
+        this.ratingCount = ratingCount;
     }
 
     public String getCreator() {
@@ -91,6 +117,22 @@ public class Shop{
 
     public void setCreator(String creator) {
         this.creator = creator;
+    }
+
+    public String getLastModifier() {
+        return lastModifier;
+    }
+
+    public void setLastModifier(String lastModifier) {
+        this.lastModifier = lastModifier;
+    }
+
+    public String getOldId() {
+        return oldId;
+    }
+
+    public void setOldId(String oldId) {
+        this.oldId = oldId;
     }
 
     public int getWidth() {
@@ -147,6 +189,7 @@ public class Shop{
         properties.put("latitude", getLatitude());
         properties.put("longitude", getLongitude());
         properties.put("rating", getRating());
+        properties.put("ratingCount", getRatingCount());
         properties.put("creator", getCreator());
         properties.put("width", getWidth());
         properties.put("height", getHeight());

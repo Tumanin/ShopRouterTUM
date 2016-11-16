@@ -1,6 +1,8 @@
 package de.applicatum.shoprouter.ui.fragments;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.applicatum.shoprouter.Application;
 import de.applicatum.shoprouter.R;
 import de.applicatum.shoprouter.model.Products.ProductsController;
 import de.applicatum.shoprouter.model.Products.ShoppingList;
@@ -24,6 +27,7 @@ import de.applicatum.shoprouter.model.Shops.Shop;
 import de.applicatum.shoprouter.ui.MainActivity;
 import de.applicatum.shoprouter.ui.view.ShopDetailView;
 import de.applicatum.shoprouter.utils.AppLog;
+import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
 public class ShopNavigationFragment extends Fragment implements ShopDetailView.OnMeasureListener{
 
@@ -67,6 +71,61 @@ public class ShopNavigationFragment extends Fragment implements ShopDetailView.O
 
     @OnClick(R.id.buttonOptions)
     public void onClick() {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+        alert.setTitle("Options");
+        alert.setCancelable(false);
+        alert.setPositiveButton("Bewerte Genauigkeit", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+                final AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+                alert.setTitle("Geschätzte Genauigkeit");
+
+                LayoutInflater inflater = activity.getLayoutInflater();
+                final View dialogView = inflater.inflate(R.layout.view_dialog_rate, null);
+                final MaterialRatingBar ratingBar = (MaterialRatingBar) dialogView.findViewById(R.id.ratingBar);
+                alert.setView(dialogView);
+                alert.setCancelable(false);
+                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                        try {
+                            int rating = ratingBar.getProgress();
+                            AppLog.d(TAG, "buttonDone", "ratingBar: "+rating);
+
+                            shop.setRating(rating);
+                            shop.save((Application)activity.getApplication());
+
+                            dialog.dismiss();
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                            return;
+                        }
+
+                    }
+                });
+
+                alert.show();
+                dialog.dismiss();
+            }
+        });
+        if (shop.getRating()<10) {
+            alert.setNeutralButton("Bearbeiten", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    ShopEditFragment fragment = new ShopEditFragment();
+                    fragment.setShop(shop);
+                    activity.startFragment(fragment, false, 0);
+                }
+            });
+        }
+        alert.setNegativeButton("Zurück", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        alert.show();
     }
 
     @Override

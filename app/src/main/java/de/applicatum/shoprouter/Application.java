@@ -36,7 +36,7 @@ import de.applicatum.shoprouter.ui.LoginActivity;
 import de.applicatum.shoprouter.ui.MainActivity;
 import de.applicatum.shoprouter.utils.AppLog;
 import de.applicatum.shoprouter.utils.StringUtil;
-import de.applicatum.shoprouter.utils.UserProfile;
+import de.applicatum.shoprouter.model.users.UserProfile;
 
 
 public class Application extends MultiDexApplication implements Replication.ChangeListener  {
@@ -394,7 +394,7 @@ public class Application extends MultiDexApplication implements Replication.Chan
                 android.util.Log.e(TAG, errorMessage, throwable);
                 String msg = String.format("%s: %s",
                         errorMessage, throwable != null ? throwable : "");
-                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
             }
         });
     }

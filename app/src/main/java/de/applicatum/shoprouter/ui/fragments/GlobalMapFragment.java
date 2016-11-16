@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.google.android.gms.common.ConnectionResult;
@@ -43,6 +44,7 @@ import de.applicatum.shoprouter.model.Shops.Shop;
 import de.applicatum.shoprouter.model.Shops.ShopsController;
 import de.applicatum.shoprouter.ui.MainActivity;
 import de.applicatum.shoprouter.utils.AppLog;
+import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -54,6 +56,7 @@ public class GlobalMapFragment extends Fragment implements OnMapReadyCallback, G
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private MainActivity activity;
+    LayoutInflater inflater;
     private View rootView;
 
     private ArrayList<Shop> shops;
@@ -66,6 +69,7 @@ public class GlobalMapFragment extends Fragment implements OnMapReadyCallback, G
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        this.inflater = inflater;
         rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
         shops = ShopsController.getInstance().getShops();
@@ -168,7 +172,7 @@ public class GlobalMapFragment extends Fragment implements OnMapReadyCallback, G
             markerOptions.snippet(shop.getAddress());
             mMap.addMarker(markerOptions);
         }
-
+        mMap.setInfoWindowAdapter(new MyInfoWindowAdapter());
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(final LatLng latLng) {
@@ -270,5 +274,38 @@ public class GlobalMapFragment extends Fragment implements OnMapReadyCallback, G
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         AppLog.d(TAG, "onConnectionFailed", "location is null");
+    }
+
+    class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+
+        private final View myContentsView;
+
+        MyInfoWindowAdapter(){
+            myContentsView = inflater.inflate(R.layout.view_marker_info_window, null);
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+
+            Shop shop = ShopsController.getInstance().getShopAtPosition(marker.getPosition().latitude, marker.getPosition().longitude);
+            if(shop != null){
+                TextView tvTitle = ((TextView)myContentsView.findViewById(R.id.textName));
+                tvTitle.setText(shop.getName());
+                TextView tvSnippet = ((TextView)myContentsView.findViewById(R.id.textAddress));
+                tvSnippet.setText(shop.getAddress());
+                MaterialRatingBar ratingBar = (MaterialRatingBar) myContentsView.findViewById(R.id.ratingBar);
+                ratingBar.setProgress(shop.getRating());
+            }
+
+
+            return myContentsView;
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
     }
 }

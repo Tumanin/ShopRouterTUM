@@ -102,10 +102,14 @@ public class ShopsController {
         double longitude = (double)document.getProperty("longitude");
         int width = (int)document.getProperty("width");
         int height = (int) document.getProperty("height");
+        int rating = (int) document.getProperty("rating");
+        int ratingCount = (int) document.getProperty("ratingCount");
         String address = (String)document.getProperty("address");
         Shop shop = new Shop(name, latitude, longitude, address);
         shop.setId(document.getId());
         shop.setWidthHeight(width, height);
+        shop.setRating(rating);
+        shop.setRatingCount(ratingCount);
         ArrayList<String> children = (ArrayList<String>)document.getProperty("children");
         AppLog.d(TAG, "makeShopFromDocument", "shop name: "+name);
         AppLog.d(TAG, "makeShopFromDocument", "size of children: "+children.size());

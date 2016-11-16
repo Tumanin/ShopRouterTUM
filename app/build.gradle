@@ -66,4 +66,5 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta3'
     compile 'com.facebook.android:facebook-android-sdk:4.17.0'
+    compile 'me.zhanghai.android.materialratingbar:library:1.0.2'
 }

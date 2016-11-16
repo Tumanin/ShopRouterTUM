@@ -1,4 +1,4 @@
-package de.applicatum.shoprouter.utils;
+package de.applicatum.shoprouter.model.users;
 
 import android.util.Log;
 
@@ -11,11 +11,64 @@ import com.couchbase.lite.QueryRow;
 import com.couchbase.lite.TransactionalTask;
 import com.couchbase.lite.UnsavedRevision;
 
+import java.util.Date;
 import java.util.List;
 
 import de.applicatum.shoprouter.Application;
 
 public class UserProfile {
+
+    private String id;
+    private String name;
+    private Date banStart;
+    private Date banEnd;
+    private int rating;
+
+    public UserProfile(String name){
+        this.name = name;
+        rating = 0;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Date getBanStart() {
+        return banStart;
+    }
+
+    public void setBanStart(Date banStart) {
+        this.banStart = banStart;
+    }
+
+    public Date getBanEnd() {
+        return banEnd;
+    }
+
+    public void setBanEnd(Date banEnd) {
+        this.banEnd = banEnd;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
     public static boolean migrateGuestData(final Database guestDb, final Document profile) {
         boolean success = true;
         final Database userDB = profile.getDatabase();
