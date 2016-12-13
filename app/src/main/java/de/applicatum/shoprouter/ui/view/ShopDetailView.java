@@ -2,9 +2,7 @@ package de.applicatum.shoprouter.ui.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -20,12 +18,14 @@ import de.applicatum.shoprouter.Application;
 import de.applicatum.shoprouter.model.Products.ProductGroup;
 import de.applicatum.shoprouter.model.Products.ProductsController;
 import de.applicatum.shoprouter.model.Products.ShoppingList;
+import de.applicatum.shoprouter.model.Products.ShoppingListItem;
 import de.applicatum.shoprouter.model.Shops.CashDesk;
 import de.applicatum.shoprouter.model.Shops.EnterExit;
 import de.applicatum.shoprouter.model.Shops.Shelf;
 import de.applicatum.shoprouter.model.Shops.Shop;
 import de.applicatum.shoprouter.R;
 import de.applicatum.shoprouter.model.Shops.ShopRoomObject;
+import de.applicatum.shoprouter.model.Shops.ShoppingListPoint;
 import de.applicatum.shoprouter.utils.AppLog;
 
 public class ShopDetailView extends View {
@@ -36,7 +36,8 @@ public class ShopDetailView extends View {
 
     private Shop shop;
     private ShopRoomObject object;
-    private OnMeasureListener listener;
+    private OnMeasureListener measureListener;
+    private OnPointTouchListener touchListener;
     private ShoppingList shoppingList;
 
     private Context context;
@@ -66,6 +67,10 @@ public class ShopDetailView extends View {
 
     public interface OnMeasureListener{
         void onMeasureDone();
+    }
+
+    public interface OnPointTouchListener{
+        void onPointTouched(ArrayList<ShoppingListItem> items);
     }
 
     private void allocatePaints(Context context){
@@ -121,7 +126,8 @@ public class ShopDetailView extends View {
         paintDelicates.setColor(ContextCompat.getColor(context, R.color.color_delicates));
 
         paintPoint = new Paint();
-        paintPoint.setStyle(Paint.Style.FILL);
+        paintPoint.setStrokeWidth(8);
+        paintPoint.setStyle(Paint.Style.STROKE);
         paintPoint.setColor(ContextCompat.getColor(context, R.color.red));
 
         paintText = new Paint();
@@ -140,6 +146,7 @@ public class ShopDetailView extends View {
     public void setData(Shop shop, boolean editMode){
         this.shop = shop;
         this.editMode = editMode;
+        shop.clearPoints();
         AppLog.d(TAG, "setData", "viewWidth: "+viewWidth);
         AppLog.d(TAG, "setData", "viewHeight: "+viewHeight);
         blockWidth = (int)viewWidth/shop.getWidth();
@@ -157,11 +164,167 @@ public class ShopDetailView extends View {
 
     public void setShoppingList(ShoppingList shoppingList){
         this.shoppingList = shoppingList;
+
+        shop.clearPoints();
+        if(shoppingList != null){
+            for(ShoppingListItem item : shoppingList.getItems()){
+                Shelf shelf = shop.getShelfForProduct(item.getProduct());
+
+                if(shelf != null){
+                    int x = shelf.getX();
+                    int y = shelf.getY();
+                    ProductGroup productGroup = ProductsController.getInstance().getProductList().getGroupForProduct(item.getProduct());
+                    if(shelf.getProductTopLeft()==productGroup){
+                        if(shelf.getProductTopRight()==productGroup){
+                            AppLog.d(TAG, "setShoppingList", "top shelf, product: "+item.getProduct());
+                            try {
+                                if(shop.getShopRoomObjects()[y-1][x]==null || shop.getShopRoomObjects()[y-1][x] instanceof ShoppingListPoint){
+                                    setPoint(x, y-1, item);
+                                }else if(shop.getShopRoomObjects()[y][x-1]==null || shop.getShopRoomObjects()[y][x-1] instanceof ShoppingListPoint){
+                                    setPoint(x-1, y, item);
+                                }else if(shop.getShopRoomObjects()[y][x+1]==null || shop.getShopRoomObjects()[y][x+1] instanceof ShoppingListPoint){
+                                    setPoint(x+1, y, item);
+                                }else if(shop.getShopRoomObjects()[y-1][x-1]==null || shop.getShopRoomObjects()[y-1][x-1] instanceof ShoppingListPoint){
+                                    setPoint(x-1, y-1, item);
+                                }else if(shop.getShopRoomObjects()[y-1][x+1]==null || shop.getShopRoomObjects()[y-1][x+1] instanceof ShoppingListPoint){
+                                    setPoint(x+1, y-1, item);
+                                }
+                            } catch (IndexOutOfBoundsException e) {
+                                e.printStackTrace();
+                            }
+                        }else if(shelf.getProductDownLeft()==productGroup){
+                            AppLog.d(TAG, "setShoppingList", "left shelf, product: "+item.getProduct());
+                            try {
+                                if(shop.getShopRoomObjects()[y][x-1]==null || shop.getShopRoomObjects()[y][x-1] instanceof ShoppingListPoint){
+                                    setPoint(x-1, y, item);
+                                }else if(shop.getShopRoomObjects()[y-1][x]==null || shop.getShopRoomObjects()[y-1][x] instanceof ShoppingListPoint){
+                                    setPoint(x, y-1, item);
+                                }else if(shop.getShopRoomObjects()[y+1][x]==null || shop.getShopRoomObjects()[y+1][x] instanceof ShoppingListPoint){
+                                    setPoint(x, y+1, item);
+                                }else if(shop.getShopRoomObjects()[y-1][x-1]==null || shop.getShopRoomObjects()[y-1][x-1] instanceof ShoppingListPoint){
+                                    setPoint(x-1, y-1, item);
+                                }else if(shop.getShopRoomObjects()[y+1][x-1]==null || shop.getShopRoomObjects()[y+1][x-1] instanceof ShoppingListPoint){
+                                    setPoint(x-1, y+1, item);
+                                }
+                            } catch (IndexOutOfBoundsException e) {
+                                e.printStackTrace();
+                            }
+                        }else {
+                            try {
+                                if(shop.getShopRoomObjects()[y][x-1]==null || shop.getShopRoomObjects()[y][x-1] instanceof ShoppingListPoint){
+                                    setPoint(x-1, y, item);
+                                }else if(shop.getShopRoomObjects()[y-1][x]==null || shop.getShopRoomObjects()[y-1][x] instanceof ShoppingListPoint){
+                                    setPoint(x, y-1, item);
+                                }else if(shop.getShopRoomObjects()[y-1][x-1]==null || shop.getShopRoomObjects()[y-1][x-1] instanceof ShoppingListPoint){
+                                    setPoint(x-1, y-1, item);
+                                }
+                            } catch (IndexOutOfBoundsException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }else if(shelf.getProductTopRight()==productGroup){
+                        if(shelf.getProductDownRight()==productGroup){
+                            AppLog.d(TAG, "setShoppingList", "right shelf, product: "+item.getProduct());
+                            try {
+                                if(shop.getShopRoomObjects()[y][x+1]==null || shop.getShopRoomObjects()[y][x+1] instanceof ShoppingListPoint){
+                                    setPoint(x+1, y, item);
+                                }else if(shop.getShopRoomObjects()[y-1][x]==null || shop.getShopRoomObjects()[y-1][x] instanceof ShoppingListPoint){
+                                    setPoint(x, y-1, item);
+                                }else if(shop.getShopRoomObjects()[y+1][x]==null || shop.getShopRoomObjects()[y+1][x] instanceof ShoppingListPoint){
+                                    setPoint(x, y+1, item);
+                                }else if(shop.getShopRoomObjects()[y-1][x+1]==null || shop.getShopRoomObjects()[y-1][x+1] instanceof ShoppingListPoint){
+                                    setPoint(x+1, y-1, item);
+                                }else if(shop.getShopRoomObjects()[y+1][x+1]==null || shop.getShopRoomObjects()[y+1][x+1] instanceof ShoppingListPoint){
+                                    setPoint(x+1, y+1, item);
+                                }
+                            } catch (IndexOutOfBoundsException e) {
+                                e.printStackTrace();
+                            }
+                        }else {
+                            try {
+                                if(shop.getShopRoomObjects()[y-1][x]==null || shop.getShopRoomObjects()[y-1][x] instanceof ShoppingListPoint){
+                                    setPoint(x, y-1, item);
+                                }else if(shop.getShopRoomObjects()[y][x+1]==null || shop.getShopRoomObjects()[y][x+1] instanceof ShoppingListPoint){
+                                    setPoint(x+1, y, item);
+                                }else if(shop.getShopRoomObjects()[y-1][x+1]==null || shop.getShopRoomObjects()[y-1][x+1] instanceof ShoppingListPoint){
+                                    setPoint(x+1, y-1, item);
+                                }
+                            } catch (IndexOutOfBoundsException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }else if(shelf.getProductDownLeft()==productGroup){
+                        if(shelf.getProductDownRight()==productGroup){
+                            AppLog.d(TAG, "setShoppingList", "down shelf, product: "+item.getProduct());
+                            try {
+                                if(shop.getShopRoomObjects()[y+1][x]==null || shop.getShopRoomObjects()[y+1][x] instanceof ShoppingListPoint){
+                                    setPoint(x, y+1, item);
+                                }else if(shop.getShopRoomObjects()[y][x-1]==null || shop.getShopRoomObjects()[y][x-1] instanceof ShoppingListPoint){
+                                    setPoint(x-1, y, item);
+                                }else if(shop.getShopRoomObjects()[y][x+1]==null || shop.getShopRoomObjects()[y][x+1] instanceof ShoppingListPoint){
+                                    setPoint(x+1, y, item);
+                                }else if(shop.getShopRoomObjects()[y+1][x-1]==null || shop.getShopRoomObjects()[y+1][x-1] instanceof ShoppingListPoint){
+                                    setPoint(x-1, y+1, item);
+                                }else if(shop.getShopRoomObjects()[y+1][x+1]==null || shop.getShopRoomObjects()[y+1][x+1] instanceof ShoppingListPoint){
+                                    setPoint(x+1, y+1, item);
+                                }
+                            } catch (IndexOutOfBoundsException e) {
+                                e.printStackTrace();
+                            }
+                        }else {
+                            try {
+                                if(shop.getShopRoomObjects()[y][x-1]==null || shop.getShopRoomObjects()[y][x-1] instanceof ShoppingListPoint){
+                                    setPoint(x-1, y, item);
+                                }else if(shop.getShopRoomObjects()[y+1][x]==null || shop.getShopRoomObjects()[y+1][x] instanceof ShoppingListPoint){
+                                    setPoint(x, y+1, item);
+                                }else if(shop.getShopRoomObjects()[y+1][x-1]==null || shop.getShopRoomObjects()[y+1][x-1] instanceof ShoppingListPoint){
+                                    setPoint(x-1, y+1, item);
+                                }
+                            } catch (IndexOutOfBoundsException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }else if(shelf.getProductDownRight()==productGroup){
+                        try {
+                            if(shop.getShopRoomObjects()[y][x+1]==null || shop.getShopRoomObjects()[y][x+1] instanceof ShoppingListPoint){
+                                setPoint(x+1, y, item);
+                            }else if(shop.getShopRoomObjects()[y+1][x]==null || shop.getShopRoomObjects()[y+1][x] instanceof ShoppingListPoint){
+                                setPoint(x, y+1, item);
+                            }else if(shop.getShopRoomObjects()[y+1][x+1]==null || shop.getShopRoomObjects()[y+1][x+1] instanceof ShoppingListPoint){
+                                setPoint(x+1, y+1, item);
+                            }
+                        } catch (IndexOutOfBoundsException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+
         this.invalidate();
     }
 
-    public void setListener(OnMeasureListener listener) {
-        this.listener = listener;
+    private void setPoint(int x, int y, ShoppingListItem item){
+        ShoppingListPoint point;
+        if(shop.getShopRoomObjects()[y][x] instanceof ShoppingListPoint){
+            AppLog.d(TAG, "setPoint","point exists on: "+x+", "+y);
+            point = (ShoppingListPoint) shop.getShopRoomObjects()[y][x];
+        }else{
+            AppLog.d(TAG, "setPoint","new point on: "+x+", "+y);
+            point = new ShoppingListPoint(x, y);
+        }
+        AppLog.d(TAG, "setPoint","add item: "+item.getProduct().getName());
+        point.addItem(item);
+        AppLog.d(TAG, "setPoint","items count: "+point.getItems().size());
+        shop.addShopRoomObject(point);
+    }
+
+    public void setMeasureListener(OnMeasureListener measureListener) {
+        this.measureListener = measureListener;
+    }
+
+    public void setTouchListener(OnPointTouchListener touchListener) {
+        this.touchListener = touchListener;
     }
 
     public ShopDetailView(Context context) {
@@ -195,7 +358,7 @@ public class ShopDetailView extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         viewWidth = getMeasuredWidth();
         viewHeight = getMeasuredHeight();
-        if(listener != null) listener.onMeasureDone();
+        if(measureListener != null) measureListener.onMeasureDone();
     }
 
     @Override
@@ -243,12 +406,12 @@ public class ShopDetailView extends View {
 
 
 
-                        AppLog.d(TAG, "onDraw", "startPointX: "+startPointX);
-                        AppLog.d(TAG, "onDraw", "startPointY: "+startPointY);
-                        AppLog.d(TAG, "onDraw", "endPointX: "+endPointX);
-                        AppLog.d(TAG, "onDraw", "endPointY: "+endPointY);
-                        AppLog.d(TAG, "onDraw", "middlePointX: "+middlePointX);
-                        AppLog.d(TAG, "onDraw", "middlePointY: "+middlePointY);
+//                        AppLog.d(TAG, "onDraw", "startPointX: "+startPointX);
+//                        AppLog.d(TAG, "onDraw", "startPointY: "+startPointY);
+//                        AppLog.d(TAG, "onDraw", "endPointX: "+endPointX);
+//                        AppLog.d(TAG, "onDraw", "endPointY: "+endPointY);
+//                        AppLog.d(TAG, "onDraw", "middlePointX: "+middlePointX);
+//                        AppLog.d(TAG, "onDraw", "middlePointY: "+middlePointY);
 
                         if(shelf.getProductTopLeft() != null){
                             canvas.drawRect(startPointX, startPointY, middlePointX, middlePointY, getPaintOfProductGroup(shelf.getProductTopLeft()));
@@ -270,6 +433,9 @@ public class ShopDetailView extends View {
                         }else{
                             canvas.drawRect(middlePointX, middlePointY, endPointX, endPointY, paintEmptyShelf);
                         }
+                    } else if(shopRoomObject instanceof ShoppingListPoint && !editMode){
+                        int radius = (int) Math.min(blockHeight, blockWidth)/3;
+                        canvas.drawCircle(middlePointX, middlePointY, radius, paintPoint);
                     }
                 }
             }
@@ -321,6 +487,13 @@ public class ShopDetailView extends View {
                                 if(shopRoomObject != null) shopRoomObject.delete(application);
                             }
                         } else {
+                            if (shop.getShopRoomObjects()[y][x] != null && shop.getShopRoomObjects()[y][x] instanceof ShoppingListPoint) {
+                                if(touchListener != null){
+                                    ShoppingListPoint point = (ShoppingListPoint) shop.getShopRoomObjects()[y][x];
+                                    AppLog.d(TAG, "onTouchEvent","items count: "+point.getItems().size());
+                                    touchListener.onPointTouched(point.getItems());
+                                }
+                            }
                         }
                         this.invalidate();
                     }

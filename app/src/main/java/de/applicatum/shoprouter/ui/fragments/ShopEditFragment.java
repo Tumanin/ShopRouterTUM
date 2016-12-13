@@ -70,7 +70,7 @@ public class ShopEditFragment extends Fragment implements ShopDetailView.OnMeasu
         if(shop.getWidth()<1 || shop.getHeight()<1){
             startDimensDialog();
         } else{
-            shopView.setListener(this);
+            shopView.setMeasureListener(this);
         }
         return view;
     }
@@ -101,7 +101,7 @@ public class ShopEditFragment extends Fragment implements ShopDetailView.OnMeasu
                 final View dialogView = inflater.inflate(R.layout.view_dialog_rate, null);
                 final MaterialRatingBar ratingBar = (MaterialRatingBar) dialogView.findViewById(R.id.ratingBar);
                 alert.setView(dialogView);
-                alert.setCancelable(false);
+                alert.setCancelable(true);
                 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
 

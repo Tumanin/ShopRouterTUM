@@ -11,11 +11,11 @@
 		},
 		{
 			"type":"product",
-			"name":"Knäckerbrot"
+			"name":"Knäckebrot"
 		},
 		{
 			"type":"product",
-			"name":"Süssgebäck"
+			"name":"Süßgebäck"
 		},
 		{
 			"type":"product",
@@ -71,7 +71,7 @@
 		},
 		{
 			"type":"product",
-			"name":"Hänchen/Pute"
+			"name":"Hähnchen/Pute"
 		}
 		]	
 		},
@@ -123,7 +123,7 @@
 		},
 		{
 			"type":"product",
-			"name":"Blümen"
+			"name":"Blumen"
 		}
 		]	
 		},
@@ -167,7 +167,7 @@
 		},
 		{
 			"type":"product",
-			"name":"Fix-produkte"
+			"name":"Fix-Produkte"
 		},
 		{
 			"type":"product",

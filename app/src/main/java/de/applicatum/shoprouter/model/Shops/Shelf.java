@@ -56,6 +56,11 @@ public class Shelf extends ShopRoomObject {
         this.productDownRight = productDownRight;
     }
 
+    public boolean containsProductGroup(ProductGroup productGroup){
+        return productTopLeft == productGroup || productTopRight == productGroup
+                || productDownLeft == productGroup || productDownRight == productGroup;
+    }
+
     @Override
     public void save(Application application){
 

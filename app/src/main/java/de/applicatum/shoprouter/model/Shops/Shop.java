@@ -10,6 +10,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.applicatum.shoprouter.Application;
+import de.applicatum.shoprouter.model.Products.Product;
+import de.applicatum.shoprouter.model.Products.ProductGroup;
+import de.applicatum.shoprouter.model.Products.ProductList;
+import de.applicatum.shoprouter.model.Products.ProductsController;
 import de.applicatum.shoprouter.utils.AppLog;
 
 public class Shop{
@@ -179,6 +183,35 @@ public class Shop{
         return shopRoomObject;
     }
 
+    public Shelf getShelfForProduct(Product product){
+        ProductGroup productGroup = ProductsController.getInstance().getProductList().getGroupForProduct(product);
+        if(shopRoomObjects != null){
+            for(int i=0; i<shopRoomObjects.length; i++){
+                for(int j=0; j<shopRoomObjects[i].length; j++){
+                    if(shopRoomObjects[i][j]!=null && shopRoomObjects[i][j] instanceof Shelf){
+                        AppLog.d(TAG, "getShelfForProduct", "object: "+shopRoomObjects[i][j].getId());
+                        Shelf shelf = (Shelf) shopRoomObjects[i][j];
+                        if(shelf.containsProductGroup(productGroup)) return shelf;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public void clearPoints(){
+
+        if(shopRoomObjects != null){
+            for(int i=0; i<shopRoomObjects.length; i++){
+                for(int j=0; j<shopRoomObjects[i].length; j++){
+                    if(shopRoomObjects[i][j]  instanceof ShoppingListPoint){
+                        shopRoomObjects[i][j] = null;
+                    }
+                }
+            }
+        }
+    }
+
     public void save(Application application){
 
         final Map<String, Object> properties = new HashMap<>();
@@ -198,7 +231,7 @@ public class Shop{
         if(shopRoomObjects != null){
             for(int i=0; i<shopRoomObjects.length; i++){
                 for(int j=0; j<shopRoomObjects[i].length; j++){
-                    if(shopRoomObjects[i][j]!=null){
+                    if(shopRoomObjects[i][j]!=null && !(shopRoomObjects[i][j] instanceof ShoppingListPoint)){
                         AppLog.d(TAG, "save", "object: "+shopRoomObjects[i][j].getId());
                         children.add(shopRoomObjects[i][j].getId());
                     }

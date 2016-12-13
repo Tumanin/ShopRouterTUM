@@ -119,7 +119,7 @@ public class ShopsController {
             if (shopRoomObject.getId()!=null) {
                 for(String child : children){
                     AppLog.d(TAG, "makeShopFromDocument", "child: "+child);
-                    if(child.equals(shopRoomObject.getId())){
+                    if(child != null && child.equals(shopRoomObject.getId())){
                         AppLog.d(TAG, "makeShopFromDocument", "found child");
                         shop.addShopRoomObject(shopRoomObject);
                     }

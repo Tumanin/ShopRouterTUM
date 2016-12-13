@@ -13,8 +13,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,13 +25,14 @@ import de.applicatum.shoprouter.Application;
 import de.applicatum.shoprouter.R;
 import de.applicatum.shoprouter.model.Products.ProductsController;
 import de.applicatum.shoprouter.model.Products.ShoppingList;
+import de.applicatum.shoprouter.model.Products.ShoppingListItem;
 import de.applicatum.shoprouter.model.Shops.Shop;
 import de.applicatum.shoprouter.ui.MainActivity;
 import de.applicatum.shoprouter.ui.view.ShopDetailView;
 import de.applicatum.shoprouter.utils.AppLog;
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
-public class ShopNavigationFragment extends Fragment implements ShopDetailView.OnMeasureListener{
+public class ShopNavigationFragment extends Fragment implements ShopDetailView.OnMeasureListener, ShopDetailView.OnPointTouchListener{
 
     public static final String TAG = "ShopNavigationFragment";
     @BindView(R.id.spinnerShopList)
@@ -60,7 +63,8 @@ public class ShopNavigationFragment extends Fragment implements ShopDetailView.O
         if(shop != null){
             AppLog.d(TAG, "onCreateView", "shop name: "+shop.getName());
         }
-        shopView.setListener(this);
+        shopView.setMeasureListener(this);
+        shopView.setTouchListener(this);
         setSpinner();
         return mRootView;
     }
@@ -167,5 +171,24 @@ public class ShopNavigationFragment extends Fragment implements ShopDetailView.O
     public void onMeasureDone() {
         AppLog.d(TAG, "onMeasureDone", "start");
         shopView.setData(shop, false);
+    }
+
+    @Override
+    public void onPointTouched(ArrayList<ShoppingListItem> items) {
+        String[] shoppingListTitles = new String[items.size()];
+        for(int i=0; i<shoppingListTitles.length; i++){
+            shoppingListTitles[i] = items.get(i).getProduct().getName();
+        }
+        AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+        alert.setTitle("Produkte");
+        alert.setCancelable(true);
+        alert.setItems(shoppingListTitles, null);
+        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        alert.show();
     }
 }

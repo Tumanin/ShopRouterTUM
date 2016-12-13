@@ -18,9 +18,9 @@ public class ProductList {
 
     public ArrayList<ProductGroup> getProductGroups() {
 
-        for(ProductGroup productGroup : productGroups){
-            AppLog.d(TAG, "getProductGroups", "productGroup: "+ productGroup.getName());
-        }
+//        for(ProductGroup productGroup : productGroups){
+//            AppLog.d(TAG, "getProductGroups", "productGroup: "+ productGroup.getName());
+//        }
         return productGroups;
     }
 
@@ -41,6 +41,13 @@ public class ProductList {
 
         for(ProductGroup productGroup : productGroups){
             if(productGroup.getName().equals(name)) return productGroup;
+        }
+        return null;
+    }
+
+    public ProductGroup getGroupForProduct(Product product){
+        for(ProductGroup productGroup : productGroups){
+            if(productGroup.getProduct(product.getName())!=null) return productGroup;
         }
         return null;
     }
