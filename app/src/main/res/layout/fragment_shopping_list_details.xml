@@ -19,7 +19,7 @@
         android:id="@+id/buttonAdd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Product"
+        android:text="Produkt hinzufügen"
         android:textColor="@color/full_white"
         android:background="@drawable/button_add_item"
         android:layout_alignParentBottom="true"/>

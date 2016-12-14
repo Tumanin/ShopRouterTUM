@@ -101,7 +101,7 @@ public class GlobalMapFragment extends Fragment implements OnMapReadyCallback, G
 //        childFragTrans.addToBackStack("SupportMapFragment");
 //        childFragTrans.commit();
 
-        activity.setTitle("Global Map");
+        activity.setTitle("Globale Karte");
         smf.getMapAsync(this);
     }
 
@@ -177,7 +177,7 @@ public class GlobalMapFragment extends Fragment implements OnMapReadyCallback, G
             @Override
             public void onMapClick(final LatLng latLng) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(activity);
-                alert.setTitle("New Shop");
+                alert.setTitle("Neues Geschäft");
 
                 LayoutInflater inflater = activity.getLayoutInflater();
                 final View view = inflater.inflate(R.layout.view_dialog_new_shop, null);

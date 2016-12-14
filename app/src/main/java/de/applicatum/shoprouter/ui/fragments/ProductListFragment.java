@@ -81,9 +81,9 @@ public class ProductListFragment extends Fragment {
         super.onResume();
 
         if (fromShoppingList) {
-            sActivity.setTitle("Products");
+            sActivity.setTitle("Alle Produkte");
         } else {
-            mActivity.setTitle("Products");
+            mActivity.setTitle("Alle Produkte");
         }
     }
 

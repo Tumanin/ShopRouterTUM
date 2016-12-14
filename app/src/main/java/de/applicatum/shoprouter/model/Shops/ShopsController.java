@@ -115,12 +115,12 @@ public class ShopsController {
         AppLog.d(TAG, "makeShopFromDocument", "size of children: "+children.size());
 
         for(ShopRoomObject shopRoomObject : shopRoomObjects){
-            AppLog.d(TAG, "makeShopFromDocument", "shopRoomObject: "+shopRoomObject.getId());
+            //AppLog.d(TAG, "makeShopFromDocument", "shopRoomObject: "+shopRoomObject.getId());
             if (shopRoomObject.getId()!=null) {
                 for(String child : children){
-                    AppLog.d(TAG, "makeShopFromDocument", "child: "+child);
+                    //AppLog.d(TAG, "makeShopFromDocument", "child: "+child);
                     if(child != null && child.equals(shopRoomObject.getId())){
-                        AppLog.d(TAG, "makeShopFromDocument", "found child");
+                        //AppLog.d(TAG, "makeShopFromDocument", "found child");
                         shop.addShopRoomObject(shopRoomObject);
                     }
                 }

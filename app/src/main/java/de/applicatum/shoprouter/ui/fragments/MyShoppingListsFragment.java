@@ -98,12 +98,12 @@ public class MyShoppingListsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mActivity.setTitle("My Shopping Lists");
+        mActivity.setTitle("Meine Einkaufslisten");
     }
 
     private void displayCreateDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-        alert.setTitle("New Shopping List");
+        alert.setTitle("Neue Einkaufsliste");
 
         LayoutInflater inflater = mActivity.getLayoutInflater();
         final View view = inflater.inflate(R.layout.view_dialog_input, null);

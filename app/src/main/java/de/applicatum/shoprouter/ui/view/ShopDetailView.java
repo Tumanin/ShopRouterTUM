@@ -548,7 +548,7 @@ public class ShopDetailView extends View {
         // Pick a reasonably large value for the test. Larger values produce
         // more accurate results, but may cause problems with hardware
         // acceleration.
-        final float testTextSize = 20f;
+        final float testTextSize = 40f;
 
         // Get the bounds of the text, using our testTextSize.
         paint.setTextSize(testTextSize);

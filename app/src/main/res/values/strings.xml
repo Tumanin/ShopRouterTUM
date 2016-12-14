@@ -10,12 +10,12 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="text_swipe_to_disconnect">Swipe left to delete</string>
-    <string name="dialog_unlink_question">Delete ShoppingList %s?</string>
-    <string name="dialog_btn_dialog_yes">Yes</string>
-    <string name="dialog_btn_dialog_no">No</string>
-    <string name="text_disconnect">DELETE</string>
-    <string name="button_guest_login">Log in as Guest</string>
+    <string name="text_swipe_to_disconnect">Nach links schieben und löschen</string>
+    <string name="dialog_unlink_question">Löschen die Einkaufsliste %s?</string>
+    <string name="dialog_btn_dialog_yes">Ja</string>
+    <string name="dialog_btn_dialog_no">Nein</string>
+    <string name="text_disconnect">LÖSCHEN</string>
+    <string name="button_guest_login">Als Gast anmelden</string>
 
     <array name="shop_objects">
         <item>Leere Fläche</item>
